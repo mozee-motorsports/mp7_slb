@@ -13,7 +13,7 @@ uint8_t readPinStates(void)
     uint8_t state = 0;
     for (int i = 0; i < NUM_SWITCHES; i++)
     {
-        if (HAL_GPIO_ReadPin(switchPorts[i], switchPins[i]) == GPIO_PIN_SET)
+        if (HAL_GPIO_ReadPin(shutdownLoopPorts[i], shutdownLoopPins[i]) == GPIO_PIN_SET)
         {
             state |= (1 << i);  // Set the corresponding bit if the switch is on
             // ASK IF FIND IF VALID AND IF SO DO AN EXTRA BIT OR T/F flag and WHERE IT IS

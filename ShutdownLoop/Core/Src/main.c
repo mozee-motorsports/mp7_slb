@@ -42,7 +42,6 @@
 /* Private variables ---------------------------------------------------------*/
 
 COM_InitTypeDef BspCOMInit;
-__IO uint32_t BspButtonState = BUTTON_RELEASED;
 
 /* USER CODE BEGIN PV */
 
@@ -93,12 +92,6 @@ int main(void)
 
   /* USER CODE END 2 */
 
-  /* Initialize led */
-  BSP_LED_Init(LED_GREEN);
-
-  /* Initialize USER push-button, will be used to trigger an interrupt each time it's pressed.*/
-  BSP_PB_Init(BUTTON_USER, BUTTON_MODE_EXTI);
-
   /* Initialize COM1 port (115200, 8 bits (7-bit data + 1 stop bit), no parity */
   BspCOMInit.BaudRate   = 115200;
   BspCOMInit.WordLength = COM_WORDLENGTH_8B;
@@ -110,39 +103,16 @@ int main(void)
     Error_Handler();
   }
 
-  /* USER CODE BEGIN BSP */
-
-  /* -- Sample board code to send message over COM1 port ---- */
- // printf("Welcome to STM32 world !\n\r");
-
-  /* -- Sample board code to switch on led ---- */
-  //BSP_LED_On(LED_GREEN);
-
-  /* USER CODE END BSP */
-
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   uint8_t currentState;
   while (1)
   {
+     currentState = readPinStates();
 
-    // /* -- Sample board code for User push-button in interrupt mode ---- */
-    // if (BspButtonState == BUTTON_PRESSED)
-    // {
-    //   /* Update button state */
-    //   BspButtonState = BUTTON_RELEASED;
-    //   /* -- Sample board code to toggle led ---- */
-    //   BSP_LED_Toggle(LED_GREEN);
-
-    //   /* ..... Perform your action ..... */
-    // }
-
-    currentState = readSwitchStates();
-
-    HAL_Delay(100);  // Optional delay for debounce
+    //HAL_Delay(100);  // Optional delay for debounce
 
     //CODE TO SEND TO CAN
-    
 
     /* USER CODE END WHILE */
 
@@ -211,27 +181,20 @@ static void MX_GPIO_Init(void)
   /* GPIO Ports Clock Enable */
   __HAL_RCC_GPIOC_CLK_ENABLE();
   __HAL_RCC_GPIOF_CLK_ENABLE();
-  __HAL_RCC_GPIOG_CLK_ENABLE();
   __HAL_RCC_GPIOA_CLK_ENABLE();
   __HAL_RCC_GPIOB_CLK_ENABLE();
 
-  /*Configure GPIO pins : RL3_Pin RL4_Pin */
-  GPIO_InitStruct.Pin = RL3_Pin|RL4_Pin;
+  /*Configure GPIO pins : RL3_Pin RL4_Pin RL5_Pin */
+  GPIO_InitStruct.Pin = RL3_Pin|RL4_Pin|RL5_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : RL5_Pin CockPitBRB_Pin */
-  GPIO_InitStruct.Pin = RL5_Pin|CockPitBRB_Pin;
+  /*Configure GPIO pins : CockPitBRB_Pin TSMS_Pin */
+  GPIO_InitStruct.Pin = CockPitBRB_Pin|TSMS_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(GPIOF, &GPIO_InitStruct);
-
-  /*Configure GPIO pin : TSS_Pin */
-  GPIO_InitStruct.Pin = TSS_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  HAL_GPIO_Init(TSS_GPIO_Port, &GPIO_InitStruct);
 
   /*Configure GPIO pins : RightBRB_Pin LeftBRB_Pin */
   GPIO_InitStruct.Pin = RightBRB_Pin|LeftBRB_Pin;
@@ -252,19 +215,6 @@ static void MX_GPIO_Init(void)
 /* USER CODE BEGIN 4 */
 
 /* USER CODE END 4 */
-
-/**
-  * @brief BSP Push Button callback
-  * @param Button Specifies the pressed button
-  * @retval None
-  */
-void BSP_PB_Callback(Button_TypeDef Button)
-{
-  if (Button == BUTTON_USER)
-  {
-    BspButtonState = BUTTON_PRESSED;
-  }
-}
 
 /**
   * @brief  This function is executed in case of error occurrence.
