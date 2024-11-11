@@ -94,10 +94,10 @@ int main(void)
   /* USER CODE END 2 */
 
   /* Initialize led */
-  BSP_LED_Init(LED_GREEN);
+  //BSP_LED_Init(LED_GREEN);
 
   /* Initialize USER push-button, will be used to trigger an interrupt each time it's pressed.*/
-  BSP_PB_Init(BUTTON_USER, BUTTON_MODE_EXTI);
+  //BSP_PB_Init(BUTTON_USER, BUTTON_MODE_EXTI);
 
   /* Initialize COM1 port (115200, 8 bits (7-bit data + 1 stop bit), no parity */
   BspCOMInit.BaudRate   = 115200;
@@ -113,28 +113,37 @@ int main(void)
   /* USER CODE BEGIN BSP */
 
   /* -- Sample board code to send message over COM1 port ---- */
-  printf("Welcome to STM32 world !\n\r");
+ // printf("Welcome to STM32 world !\n\r");
 
   /* -- Sample board code to switch on led ---- */
-  BSP_LED_On(LED_GREEN);
+  //BSP_LED_On(LED_GREEN);
 
   /* USER CODE END BSP */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
+  uint8_t currentState;
   while (1)
   {
 
-    /* -- Sample board code for User push-button in interrupt mode ---- */
-    if (BspButtonState == BUTTON_PRESSED)
-    {
-      /* Update button state */
-      BspButtonState = BUTTON_RELEASED;
-      /* -- Sample board code to toggle led ---- */
-      BSP_LED_Toggle(LED_GREEN);
+    // /* -- Sample board code for User push-button in interrupt mode ---- */
+    // if (BspButtonState == BUTTON_PRESSED)
+    // {
+    //   /* Update button state */
+    //   BspButtonState = BUTTON_RELEASED;
+    //   /* -- Sample board code to toggle led ---- */
+    //   BSP_LED_Toggle(LED_GREEN);
 
-      /* ..... Perform your action ..... */
-    }
+    //   /* ..... Perform your action ..... */
+    // }
+
+    currentState = readSwitchStates();
+
+    HAL_Delay(100);  // Optional delay for debounce
+
+    //CODE TO SEND TO CAN
+    
+
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
