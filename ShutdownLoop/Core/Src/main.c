@@ -108,9 +108,9 @@ int main(void)
   uint8_t currentState;
   while (1)
   {
-     currentState = readPinStates();
+    currentState = readPinStates();
 
-    //HAL_Delay(100);  // Optional delay for debounce
+    HAL_Delay(100);  // Optional delay for debounce
 
     //CODE TO SEND TO CAN
 
@@ -180,33 +180,21 @@ static void MX_GPIO_Init(void)
 
   /* GPIO Ports Clock Enable */
   __HAL_RCC_GPIOC_CLK_ENABLE();
-  __HAL_RCC_GPIOF_CLK_ENABLE();
   __HAL_RCC_GPIOA_CLK_ENABLE();
-  __HAL_RCC_GPIOB_CLK_ENABLE();
 
-  /*Configure GPIO pins : RL3_Pin RL4_Pin RL5_Pin */
-  GPIO_InitStruct.Pin = RL3_Pin|RL4_Pin|RL5_Pin;
+  /*Configure GPIO pins : RL3_Pin RL4_Pin RL5_Pin CockPitBRB_Pin
+                           TSMS_Pin */
+  GPIO_InitStruct.Pin = RL3_Pin|RL4_Pin|RL5_Pin|CockPitBRB_Pin
+                          |TSMS_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : CockPitBRB_Pin TSMS_Pin */
-  GPIO_InitStruct.Pin = CockPitBRB_Pin|TSMS_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  HAL_GPIO_Init(GPIOF, &GPIO_InitStruct);
-
-  /*Configure GPIO pins : RightBRB_Pin LeftBRB_Pin */
-  GPIO_InitStruct.Pin = RightBRB_Pin|LeftBRB_Pin;
+  /*Configure GPIO pins : LeftBRB_Pin BreakOverTravel_Pin RightBRB_Pin */
+  GPIO_InitStruct.Pin = LeftBRB_Pin|BreakOverTravel_Pin|RightBRB_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
-
-  /*Configure GPIO pin : BreakOverTravel_Pin */
-  GPIO_InitStruct.Pin = BreakOverTravel_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  HAL_GPIO_Init(BreakOverTravel_GPIO_Port, &GPIO_InitStruct);
 
 /* USER CODE BEGIN MX_GPIO_Init_2 */
 /* USER CODE END MX_GPIO_Init_2 */

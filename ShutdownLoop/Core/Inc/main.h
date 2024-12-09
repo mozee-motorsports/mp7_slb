@@ -61,22 +61,22 @@ void Error_Handler(void);
 /* Private defines -----------------------------------------------------------*/
 #define RL3_Pin GPIO_PIN_13
 #define RL3_GPIO_Port GPIOC
-#define RL4_Pin GPIO_PIN_14
+#define RL4_Pin GPIO_PIN_0
 #define RL4_GPIO_Port GPIOC
-#define RL5_Pin GPIO_PIN_15
+#define RL5_Pin GPIO_PIN_1
 #define RL5_GPIO_Port GPIOC
-#define CockPitBRB_Pin GPIO_PIN_0
-#define CockPitBRB_GPIO_Port GPIOF
-#define TSMS_Pin GPIO_PIN_1
-#define TSMS_GPIO_Port GPIOF
+#define CockPitBRB_Pin GPIO_PIN_2
+#define CockPitBRB_GPIO_Port GPIOC
+#define TSMS_Pin GPIO_PIN_3
+#define TSMS_GPIO_Port GPIOC
+#define LeftBRB_Pin GPIO_PIN_0
+#define LeftBRB_GPIO_Port GPIOA
+#define BreakOverTravel_Pin GPIO_PIN_1
+#define BreakOverTravel_GPIO_Port GPIOA
 #define RightBRB_Pin GPIO_PIN_5
 #define RightBRB_GPIO_Port GPIOA
 #define T_SWDIO_Pin GPIO_PIN_13
 #define T_SWDIO_GPIO_Port GPIOA
-#define LeftBRB_Pin GPIO_PIN_14
-#define LeftBRB_GPIO_Port GPIOA
-#define BreakOverTravel_Pin GPIO_PIN_3
-#define BreakOverTravel_GPIO_Port GPIOB
 
 /* USER CODE BEGIN Private defines */
 
