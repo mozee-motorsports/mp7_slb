@@ -8,12 +8,12 @@
 
  #include "main.h"
 
-#define NUM_SWITCHES 8
+#define NUM_SWITCHES 7
 
-GPIO_TypeDef* shutdownLoopPorts[NUM_SWITCHES] = {RightBRB_GPIO_Port, LeftBRB_GPIO_Port, 
-BreakOverTravel_GPIO_Port, RL3_GPIO_Port, RL4_GPIO_Port, RL5_GPIO_Port, CockPitBRB_GPIO_Port,
- TSMS_GPIO_Port};
-uint16_t shutdownLoopPins[NUM_SWITCHES] = {RightBRB_Pin, LeftBRB_Pin, 
-BreakOverTravel_Pin, RL3_Pin, RL4_Pin, RL5_Pin, CockPitBRB_Pin, TSMS_Pin};
+GPIO_TypeDef* shutdownLoopPorts[NUM_SWITCHES] = {BRB_GPIO_Port, 
+BOTS_GPIO_Port, AMS_GPIO_Port, ToCBRB_GPIO_Port, FromCBRB_GPIO_Port, TSMS_GPIO_Port,
+LEDDisable_GPIO_Port,};
+uint16_t shutdownLoopPins[NUM_SWITCHES] = {BRB_Pin,
+BOTS_Pin, AMS_Pin, ToCBRB_Pin, FromCBRB_Pin, TSMS_Pin, LEDDisable_Pin};
 
 uint8_t readPinStates(void);

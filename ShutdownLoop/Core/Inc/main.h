@@ -59,22 +59,20 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
-#define RL3_Pin GPIO_PIN_13
-#define RL3_GPIO_Port GPIOC
-#define RL4_Pin GPIO_PIN_0
-#define RL4_GPIO_Port GPIOC
-#define RL5_Pin GPIO_PIN_1
-#define RL5_GPIO_Port GPIOC
-#define CockPitBRB_Pin GPIO_PIN_2
-#define CockPitBRB_GPIO_Port GPIOC
-#define TSMS_Pin GPIO_PIN_3
-#define TSMS_GPIO_Port GPIOC
-#define LeftBRB_Pin GPIO_PIN_0
-#define LeftBRB_GPIO_Port GPIOA
-#define BreakOverTravel_Pin GPIO_PIN_1
-#define BreakOverTravel_GPIO_Port GPIOA
-#define RightBRB_Pin GPIO_PIN_5
-#define RightBRB_GPIO_Port GPIOA
+#define BRB_Pin GPIO_PIN_4
+#define BRB_GPIO_Port GPIOA
+#define ToCBRB_Pin GPIO_PIN_5
+#define ToCBRB_GPIO_Port GPIOA
+#define FromCBRB_Pin GPIO_PIN_6
+#define FromCBRB_GPIO_Port GPIOA
+#define BOTS_Pin GPIO_PIN_7
+#define BOTS_GPIO_Port GPIOA
+#define AMS_Pin GPIO_PIN_11
+#define AMS_GPIO_Port GPIOB
+#define TSMS_Pin GPIO_PIN_12
+#define TSMS_GPIO_Port GPIOB
+#define LEDDisable_Pin GPIO_PIN_13
+#define LEDDisable_GPIO_Port GPIOB
 #define T_SWDIO_Pin GPIO_PIN_13
 #define T_SWDIO_GPIO_Port GPIOA
 
