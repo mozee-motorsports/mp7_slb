@@ -21,7 +21,8 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+ #include "shutdownLoop.h"
+ 
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -67,6 +68,8 @@ int main(void)
 {
 
   /* USER CODE BEGIN 1 */
+  //turn the LED on because there is power
+  //HAL_GPIO_WritePin(LEDDisable_GPIO_Port, LEDDisable_Pin, GPIO_PIN_SET);
 
   /* USER CODE END 1 */
 
@@ -180,19 +183,26 @@ static void MX_GPIO_Init(void)
 
   /* GPIO Ports Clock Enable */
   __HAL_RCC_GPIOA_CLK_ENABLE();
+  __HAL_RCC_GPIOC_CLK_ENABLE();
   __HAL_RCC_GPIOB_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(LEDDisable_GPIO_Port, LEDDisable_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(LEDDisable_GPIO_Port, LEDDisable_Pin, GPIO_PIN_SET);
 
-  /*Configure GPIO pins : BRB_Pin ToCBRB_Pin FromCBRB_Pin BOTS_Pin */
-  GPIO_InitStruct.Pin = BRB_Pin|ToCBRB_Pin|FromCBRB_Pin|BOTS_Pin;
+  /*Configure GPIO pins : ToCBRB_Pin BOTS_Pin */
+  GPIO_InitStruct.Pin = ToCBRB_Pin|BOTS_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : AMS_Pin TSMS_Pin */
-  GPIO_InitStruct.Pin = AMS_Pin|TSMS_Pin;
+  /*Configure GPIO pins : BRB_Pin FromCBRB_Pin */
+  GPIO_InitStruct.Pin = BRB_Pin|FromCBRB_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+
+  /*Configure GPIO pins : TSMS_Pin AMS_Pin */
+  GPIO_InitStruct.Pin = TSMS_Pin|AMS_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
