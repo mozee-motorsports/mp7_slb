@@ -24,9 +24,9 @@ uint8_t readPinStates(void)
         {
             //going under assumption that the pin states 
             state |= (1 << i);  // Set the corresponding bit if the switch is on
-            printf("bit %d: %d\n", i, state);
             
         }
     }
+    printf("state bit: %d\n", state);
     return state;
 }

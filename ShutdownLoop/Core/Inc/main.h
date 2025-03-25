@@ -59,20 +59,20 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
+#define BRB_Pin GPIO_PIN_4
+#define BRB_GPIO_Port GPIOA
 #define ToCBRB_Pin GPIO_PIN_5
 #define ToCBRB_GPIO_Port GPIOA
+#define FromCBRB_Pin GPIO_PIN_6
+#define FromCBRB_GPIO_Port GPIOA
 #define BOTS_Pin GPIO_PIN_7
 #define BOTS_GPIO_Port GPIOA
-#define BRB_Pin GPIO_PIN_4
-#define BRB_GPIO_Port GPIOC
-#define FromCBRB_Pin GPIO_PIN_5
-#define FromCBRB_GPIO_Port GPIOC
+#define AMS_Pin GPIO_PIN_11
+#define AMS_GPIO_Port GPIOB
 #define TSMS_Pin GPIO_PIN_12
 #define TSMS_GPIO_Port GPIOB
 #define LEDDisable_Pin GPIO_PIN_13
 #define LEDDisable_GPIO_Port GPIOB
-#define AMS_Pin GPIO_PIN_14
-#define AMS_GPIO_Port GPIOB
 #define T_SWDIO_Pin GPIO_PIN_13
 #define T_SWDIO_GPIO_Port GPIOA
 
