@@ -59,10 +59,6 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
-#define BRB_Pin GPIO_PIN_4
-#define BRB_GPIO_Port GPIOA
-#define ToCBRB_Pin GPIO_PIN_5
-#define ToCBRB_GPIO_Port GPIOA
 #define FromCBRB_Pin GPIO_PIN_6
 #define FromCBRB_GPIO_Port GPIOA
 #define BOTS_Pin GPIO_PIN_7
