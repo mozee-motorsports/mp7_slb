@@ -59,18 +59,28 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
-#define FromCBRB_Pin GPIO_PIN_6
-#define FromCBRB_GPIO_Port GPIOA
-#define BOTS_Pin GPIO_PIN_7
-#define BOTS_GPIO_Port GPIOA
-#define AMS_Pin GPIO_PIN_11
-#define AMS_GPIO_Port GPIOB
-#define TSMS_Pin GPIO_PIN_12
-#define TSMS_GPIO_Port GPIOB
-#define LEDDisable_Pin GPIO_PIN_13
-#define LEDDisable_GPIO_Port GPIOB
+#define From_BRB_MCU_Pin GPIO_PIN_4
+#define From_BRB_MCU_GPIO_Port GPIOA
+#define To_CBRB_MCU_Pin GPIO_PIN_5
+#define To_CBRB_MCU_GPIO_Port GPIOA
+#define From_CBRB_MCU_Pin GPIO_PIN_6
+#define From_CBRB_MCU_GPIO_Port GPIOA
+#define From_BOTS_MCU_Pin GPIO_PIN_7
+#define From_BOTS_MCU_GPIO_Port GPIOA
+#define From_AMS_MCU_Pin GPIO_PIN_11
+#define From_AMS_MCU_GPIO_Port GPIOB
+#define From_TSMS_MCU_Pin GPIO_PIN_12
+#define From_TSMS_MCU_GPIO_Port GPIOB
+#define LED_Disable_Pin GPIO_PIN_13
+#define LED_Disable_GPIO_Port GPIOB
+#define CAN_1RX_Pin GPIO_PIN_11
+#define CAN_1RX_GPIO_Port GPIOA
+#define CAN_1TX_Pin GPIO_PIN_12
+#define CAN_1TX_GPIO_Port GPIOA
 #define T_SWDIO_Pin GPIO_PIN_13
 #define T_SWDIO_GPIO_Port GPIOA
+#define T_SWCLK_Pin GPIO_PIN_14
+#define T_SWCLK_GPIO_Port GPIOA
 
 /* USER CODE BEGIN Private defines */
 

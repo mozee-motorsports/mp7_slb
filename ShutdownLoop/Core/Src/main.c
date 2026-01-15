@@ -238,36 +238,26 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOB_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4|GPIO_PIN_5, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(LED_Disable_GPIO_Port, LED_Disable_Pin, GPIO_PIN_SET);
 
-  /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(LEDDisable_GPIO_Port, LEDDisable_Pin, GPIO_PIN_SET);
-
-  /*Configure GPIO pins : PA4 PA5 */
-  GPIO_InitStruct.Pin = GPIO_PIN_4|GPIO_PIN_5;
-  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
-
-  /*Configure GPIO pins : FromCBRB_Pin BOTS_Pin */
-  GPIO_InitStruct.Pin = FromCBRB_Pin|BOTS_Pin;
+  /*Configure GPIO pins : From_BRB_MCU_Pin To_CBRB_MCU_Pin From_CBRB_MCU_Pin From_BOTS_MCU_Pin */
+  GPIO_InitStruct.Pin = From_BRB_MCU_Pin|To_CBRB_MCU_Pin|From_CBRB_MCU_Pin|From_BOTS_MCU_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : AMS_Pin TSMS_Pin */
-  GPIO_InitStruct.Pin = AMS_Pin|TSMS_Pin;
+  /*Configure GPIO pins : From_AMS_MCU_Pin From_TSMS_MCU_Pin */
+  GPIO_InitStruct.Pin = From_AMS_MCU_Pin|From_TSMS_MCU_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
-  /*Configure GPIO pin : LEDDisable_Pin */
-  GPIO_InitStruct.Pin = LEDDisable_Pin;
+  /*Configure GPIO pin : LED_Disable_Pin */
+  GPIO_InitStruct.Pin = LED_Disable_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(LEDDisable_GPIO_Port, &GPIO_InitStruct);
+  HAL_GPIO_Init(LED_Disable_GPIO_Port, &GPIO_InitStruct);
 
 /* USER CODE BEGIN MX_GPIO_Init_2 */
 /* USER CODE END MX_GPIO_Init_2 */
