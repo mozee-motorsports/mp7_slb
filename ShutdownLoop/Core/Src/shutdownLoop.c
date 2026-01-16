@@ -30,3 +30,17 @@ uint8_t readPinStates(void)
     printf("state bit: %d\n", state);
     return state;
 }
+
+FDCAN_TxHeaderTypeDef createTxHeader(uint32_t canID) {
+	FDCAN_TxHeaderTypeDef header;
+	header.Identifier = canID;
+	header.IdType = FDCAN_STANDARD_ID;
+	header.TxFrameType = FDCAN_DATA_FRAME;
+	header.DataLength = FDCAN_DLC_BYTES_1;
+	header.ErrorStateIndicator = FDCAN_ESI_ACTIVE;
+	header.BitRateSwitch = FDCAN_BRS_OFF;
+	header.FDFormat = FDCAN_CLASSIC_CAN;
+	header.TxEventFifoControl = FDCAN_NO_TX_EVENTS;
+	header.MessageMarker = 0;
+	return header;
+}
