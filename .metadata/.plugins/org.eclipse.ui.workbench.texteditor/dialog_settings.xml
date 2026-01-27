@@ -3,6 +3,11 @@
 	<item key="hasShownOverlayPopupBefore" value="true"/>
 	<item key="replaceBarOpen" value="false"/>
 	<list key="searchhistory">
+		<item value="_frame_type"/>
+		<item value="hfdca"/>
+		<item value="fdcan1_in"/>
+		<item value="configfilt"/>
+		<item value="configfil"/>
 		<item value="fdcan1"/>
 		<item value="_init"/>
 		<item value="_start"/>
