@@ -3,6 +3,9 @@
 	<item key="hasShownOverlayPopupBefore" value="true"/>
 	<item key="replaceBarOpen" value="false"/>
 	<list key="searchhistory">
+		<item value="HAL_FDCAN_RxFifo0Callback"/>
+		<item value="HAL_FDCAN_GetRxMessage"/>
+		<item value="getrxmes"/>
 		<item value="interrupts"/>
 		<item value="RxFifo0ITs"/>
 		<item value="activeITs"/>
@@ -15,8 +18,5 @@
 		<item value="FDCAN_FilterTypeDef"/>
 		<item value="configfil"/>
 		<item value="glob"/>
-		<item value="_frame_type"/>
-		<item value="hfdca"/>
-		<item value="fdcan1_in"/>
 	</list>
 </section>

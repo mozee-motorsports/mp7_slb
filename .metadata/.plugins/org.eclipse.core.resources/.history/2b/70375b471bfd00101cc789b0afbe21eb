@@ -98,53 +98,9 @@ int main(void)
   uint8_t currentState;
   uint16_t canIDSwitchStatus = 0x200;
   FDCAN_FilterTypeDef filter = createFilter();
-  HAL_FDCAN_ConfigFilter(&hfdcan1, &filter);
+  HAL_FDCAN_ConfigFilter(&hfdcan1, filter);
   HAL_FDCAN_ActivateNotification(&hfdcan1, FDCAN_IT_RX_FIFO0_NEW_MESSAGE, 0);
   HAL_FDCAN_RxFifo0Callback(&hfdcan1, FDCAN_IT_RX_FIFO0_NEW_MESSAGE);
-  HAL_FDCAN_Start(&hfdcan1);
-  int newCanMessage = 0; //move elsewhere?
-
-  void HAL_FDCAN_RxFifo0Callback(FDCAN_HandleTypeDef *hfdcan, uint32_t RxFifo0ITs)
-  {
-	  FDCAN_RxHeaderTypeDef rxHeader;
-	  uint8_t rxData;
-	  if((RxFifo0ITs & FDCAN_IT_RX_FIFO0_NEW_MESSAGE) != 0)
-	  {
-		  if(HAL_FDCAN_GetRxMessage(&hfdcan1, FDCAN_Rx_location, &rxHeader, rxData/*fix syntax for rxData*/) == HAL_OK)
-		  {
-			  newCanMessage = 1;
-		  }
-		  else
-		  {
-			  Error_Handler();
-		  }
-	  }
-  }
-  void handleCanMessages(FDCAN_RxHeaderTypeDef *pRxHeader, uint8_t *pRxData)
-  {
-	  uint32_t identity = pRxHeader->Identifier;
-	  switch(identity)
-	  {
-		  case 0x100: //brb
-			  //method
-			  break;
-		  case 0x101: //cbrb
-			  //method
-			  break;
-		  case 0x102: //tsms
-			  //method
-			  break;
-		  case 0x103: //ams
-			  //method
-			  break;
-		  case 0x104: //bots
-			  //method
-			  break;
-		  case 0x105: //watchdog
-			  //method
-			  break;
-	  }
-  }
 
   /* USER CODE END 2 */
 
@@ -173,15 +129,16 @@ int main(void)
 	  currentState = readPinStates();
 
     //CODE TO SEND TO CAN
-	FDCAN_TxHeaderTypeDef txHeader = createTxHeader(canIDSwitchStatus);
+	FDCAN_TxHeaderTypeDef header = createTxHeader(canIDSwitchStatus);
 
 	uint8_t txData[1];
 	txData[0] = currentState;
 
-	HAL_FDCAN_AddMessageToTxFifoQ(&hfdcan1, &txHeader, txData);
-	if(newCanMessage)
-	{
-		handleCanMessages(&rxHeader, &rxData/*fix syntax*/);
+	HAL_FDCAN_AddMessageToTxFifoQ(&hfdcan1, &header, txData);
+	if(canRxFlag){ //todo
+		canRxFlag=false;
+
+		HAL_FDCAN_GetRxMessage(); //todo
 	}
 
 	HAL_Delay(100);  // Optional delay for debounce
