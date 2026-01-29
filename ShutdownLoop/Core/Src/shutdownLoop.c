@@ -11,6 +11,11 @@
 GPIO_TypeDef* shutdownLoopPorts[NUM_SWITCHES] = {BRB_GPIO_Port,
 BOTS_GPIO_Port, AMS_GPIO_Port, ToCBRB_GPIO_Port, FromCBRB_GPIO_Port, TSMS_GPIO_Port,
 LEDDisable_GPIO_Port,};
+//brb - big red button
+//cbrb - cockpit big red button
+//tsms - tractive system master switch
+//ams - accumulator management system
+//bots - brake over travel system
 
 uint16_t shutdownLoopPins[NUM_SWITCHES - 1] = {BRB_Pin,
 BOTS_Pin, AMS_Pin, ToCBRB_Pin, FromCBRB_Pin, TSMS_Pin, LEDDisable_Pin};
@@ -43,4 +48,16 @@ FDCAN_TxHeaderTypeDef createTxHeader(uint32_t canID) {
 	header.TxEventFifoControl = FDCAN_NO_TX_EVENTS;
 	header.MessageMarker = 0;
 	return header;
+}
+
+FDCAN_FilterTypeDef createFilter() {
+	FDCAN_FilterTypeDef filter;
+	filter.IdType = FDCAN_STANDARD_ID;
+	filter.FilterType = FDCAN_FILTER_RANGE;
+	filter.FilterIndex = 0;
+	filter.FilterID1 = 0x100;
+	filter.FilterID2 = 0x10f; //16 functions
+	filter.FilterConfig = FDCAN_FILTER_TO_RXFIFO0;
+	return filter;
+
 }

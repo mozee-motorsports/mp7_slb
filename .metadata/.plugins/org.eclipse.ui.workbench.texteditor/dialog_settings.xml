@@ -3,16 +3,20 @@
 	<item key="hasShownOverlayPopupBefore" value="true"/>
 	<item key="replaceBarOpen" value="false"/>
 	<list key="searchhistory">
+		<item value="interrupts"/>
+		<item value="RxFifo0ITs"/>
+		<item value="activeITs"/>
+		<item value="configFil"/>
+		<item value="HAL_FDCAN_ConfigGlobalFilter"/>
+		<item value="FDCAN_filter_config"/>
+		<item value="fdcan_filter_type"/>
+		<item value="filtertype"/>
+		<item value="fdcan_id_type"/>
+		<item value="FDCAN_FilterTypeDef"/>
+		<item value="configfil"/>
+		<item value="glob"/>
 		<item value="_frame_type"/>
 		<item value="hfdca"/>
 		<item value="fdcan1_in"/>
-		<item value="configfilt"/>
-		<item value="configfil"/>
-		<item value="fdcan1"/>
-		<item value="_init"/>
-		<item value="_start"/>
-		<item value="state"/>
-		<item value="can_"/>
-		<item value="can"/>
 	</list>
 </section>

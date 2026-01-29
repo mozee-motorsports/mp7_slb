@@ -95,6 +95,12 @@ int main(void)
   MX_GPIO_Init();
   MX_FDCAN1_Init();
   /* USER CODE BEGIN 2 */
+  uint8_t currentState;
+  uint16_t canIDSwitchStatus = 0x200;
+  FDCAN_FilterTypeDef filter = createFilter();
+  HAL_FDCAN_ConfigFilter(&hfdcan1, filter);
+  HAL_FDCAN_ActivateNotification(&hfdcan1, FDCAN_IT_RX_FIFO0_NEW_MESSAGE, 0);
+  HAL_FDCAN_RxFifo0Callback(&hfdcan1, FDCAN_IT_RX_FIFO0_NEW_MESSAGE);
 
   /* USER CODE END 2 */
 
@@ -112,9 +118,6 @@ int main(void)
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
 
-  //initialize can?
-  uint8_t currentState;
-  uint16_t canIDSwitchStatus = 0x200;
   while (1)
   {
 	 //practice
@@ -132,6 +135,11 @@ int main(void)
 	txData[0] = currentState;
 
 	HAL_FDCAN_AddMessageToTxFifoQ(&hfdcan1, &header, txData);
+	if(canRxFlag){ //todo
+		canRxFlag=false;
+
+		HAL_FDCAN_GetRxMessage(); //todo
+	}
 
 	HAL_Delay(100);  // Optional delay for debounce
 
