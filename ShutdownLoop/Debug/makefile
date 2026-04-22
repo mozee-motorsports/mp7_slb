@@ -10,7 +10,6 @@ RM := rm -rf
 # All of the sources participating in the build are defined here
 -include sources.mk
 -include Drivers/STM32G4xx_HAL_Driver/Src/subdir.mk
--include Drivers/BSP/STM32G4xx_Nucleo/subdir.mk
 -include Core/Startup/subdir.mk
 -include Core/Src/subdir.mk
 -include objects.mk
@@ -61,8 +60,8 @@ all: main-build
 main-build: ShutdownLoop.elf secondary-outputs
 
 # Tool invocations
-ShutdownLoop.elf ShutdownLoop.map: $(OBJS) $(USER_OBJS) C:\ELECTRONICS\STM32CUBE\STM32CubeIDE\mp7_slb\ShutdownLoop\STM32G491RETX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "ShutdownLoop.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"C:\ELECTRONICS\STM32CUBE\STM32CubeIDE\mp7_slb\ShutdownLoop\STM32G491RETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="ShutdownLoop.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+ShutdownLoop.elf ShutdownLoop.map: $(OBJS) $(USER_OBJS) C:\Users\gundlachj\fh-project-code\mp7_slb\ShutdownLoop\STM32G491RETX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "ShutdownLoop.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"C:\Users\gundlachj\fh-project-code\mp7_slb\ShutdownLoop\STM32G491RETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="ShutdownLoop.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 

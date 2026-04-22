@@ -21,8 +21,8 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "shutdownLoop.h"
- 
+#include "mp7_fdcan.h"
+
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -41,11 +41,20 @@
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
-
-COM_InitTypeDef BspCOMInit;
 FDCAN_HandleTypeDef hfdcan1;
 
+TIM_HandleTypeDef htim6;
+
 /* USER CODE BEGIN PV */
+
+uint8_t readyToDrive;
+uint8_t throttleMessageWatchdogFlag;
+
+#define RTD_MESSAGE_ID 0b00000100000
+#define RTD_MESSAGE_DLC 0
+
+#define THROTTLE_MESSAGE_ID 0b00001110011
+#define THROTTLE_MESSAGE_DLC 4
 
 /* USER CODE END PV */
 
@@ -53,6 +62,7 @@ FDCAN_HandleTypeDef hfdcan1;
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_FDCAN1_Init(void);
+static void MX_TIM6_Init(void);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
@@ -70,8 +80,6 @@ int main(void)
 {
 
   /* USER CODE BEGIN 1 */
-  //turn the LED on because there is power
-  //HAL_GPIO_WritePin(LEDDisable_GPIO_Port, LEDDisable_Pin, GPIO_PIN_SET);
 
   /* USER CODE END 1 */
 
@@ -94,97 +102,16 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_FDCAN1_Init();
+  MX_TIM6_Init();
   /* USER CODE BEGIN 2 */
-  uint8_t currentState;
-  uint16_t canIDSwitchStatus = 0x200;
-  FDCAN_FilterTypeDef filter = createFilter();
-  HAL_FDCAN_ConfigFilter(&hfdcan1, &filter);
-  HAL_FDCAN_ActivateNotification(&hfdcan1, FDCAN_IT_RX_FIFO0_NEW_MESSAGE, 0);
-  HAL_FDCAN_RxFifo0Callback(&hfdcan1, FDCAN_IT_RX_FIFO0_NEW_MESSAGE);
-  HAL_FDCAN_Start(&hfdcan1);
-  int newCanMessage = 0; //move elsewhere?
-
-  void HAL_FDCAN_RxFifo0Callback(FDCAN_HandleTypeDef *hfdcan, uint32_t RxFifo0ITs)
-  {
-	  FDCAN_RxHeaderTypeDef rxHeader;
-	  uint8_t rxData;
-	  if((RxFifo0ITs & FDCAN_IT_RX_FIFO0_NEW_MESSAGE) != 0)
-	  {
-		  if(HAL_FDCAN_GetRxMessage(&hfdcan1, FDCAN_Rx_location, &rxHeader, rxData/*fix syntax for rxData*/) == HAL_OK)
-		  {
-			  newCanMessage = 1;
-		  }
-		  else
-		  {
-			  Error_Handler();
-		  }
-	  }
-  }
-  void handleCanMessages(FDCAN_RxHeaderTypeDef *pRxHeader, uint8_t *pRxData)
-  {
-	  uint32_t identity = pRxHeader->Identifier;
-	  switch(identity)
-	  {
-		  case 0x100: //brb
-			  //method
-			  break;
-		  case 0x101: //cbrb
-			  //method
-			  break;
-		  case 0x102: //tsms
-			  //method
-			  break;
-		  case 0x103: //ams
-			  //method
-			  break;
-		  case 0x104: //bots
-			  //method
-			  break;
-		  case 0x105: //watchdog
-			  //method
-			  break;
-	  }
-  }
 
   /* USER CODE END 2 */
-
-  /* Initialize COM1 port (115200, 8 bits (7-bit data + 1 stop bit), no parity */
-  BspCOMInit.BaudRate   = 115200;
-  BspCOMInit.WordLength = COM_WORDLENGTH_8B;
-  BspCOMInit.StopBits   = COM_STOPBITS_1;
-  BspCOMInit.Parity     = COM_PARITY_NONE;
-  BspCOMInit.HwFlowCtl  = COM_HWCONTROL_NONE;
-  if (BSP_COM_Init(COM1, &BspCOMInit) != BSP_ERROR_NONE)
-  {
-    Error_Handler();
-  }
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
 
   while (1)
   {
-	 //practice
-//	  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, 1);
-//	  HAL_Delay(1000);
-//	  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, 0);
-//	  HAL_Delay(1000);
-
-	  currentState = readPinStates();
-
-    //CODE TO SEND TO CAN
-	FDCAN_TxHeaderTypeDef txHeader = createTxHeader(canIDSwitchStatus);
-
-	uint8_t txData[1];
-	txData[0] = currentState;
-
-	HAL_FDCAN_AddMessageToTxFifoQ(&hfdcan1, &txHeader, txData);
-	if(newCanMessage)
-	{
-		handleCanMessages(&rxHeader, &rxData/*fix syntax*/);
-	}
-
-	HAL_Delay(100);  // Optional delay for debounce
 
     /* USER CODE END WHILE */
 
@@ -204,7 +131,7 @@ void SystemClock_Config(void)
 
   /** Configure the main internal regulator output voltage
   */
-  HAL_PWREx_ControlVoltageScaling(PWR_REGULATOR_VOLTAGE_SCALE1_BOOST);
+  HAL_PWREx_ControlVoltageScaling(PWR_REGULATOR_VOLTAGE_SCALE1);
 
   /** Initializes the RCC Oscillators according to the specified parameters
   * in the RCC_OscInitTypeDef structure.
@@ -214,8 +141,8 @@ void SystemClock_Config(void)
   RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT;
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
   RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSI;
-  RCC_OscInitStruct.PLL.PLLM = RCC_PLLM_DIV4;
-  RCC_OscInitStruct.PLL.PLLN = 85;
+  RCC_OscInitStruct.PLL.PLLM = RCC_PLLM_DIV2;
+  RCC_OscInitStruct.PLL.PLLN = 25;
   RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV2;
   RCC_OscInitStruct.PLL.PLLQ = RCC_PLLQ_DIV2;
   RCC_OscInitStruct.PLL.PLLR = RCC_PLLR_DIV2;
@@ -233,7 +160,7 @@ void SystemClock_Config(void)
   RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV1;
   RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
 
-  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_4) != HAL_OK)
+  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_3) != HAL_OK)
   {
     Error_Handler();
   }
@@ -261,15 +188,15 @@ static void MX_FDCAN1_Init(void)
   hfdcan1.Init.AutoRetransmission = DISABLE;
   hfdcan1.Init.TransmitPause = DISABLE;
   hfdcan1.Init.ProtocolException = DISABLE;
-  hfdcan1.Init.NominalPrescaler = 16;
+  hfdcan1.Init.NominalPrescaler = 5;
   hfdcan1.Init.NominalSyncJumpWidth = 1;
-  hfdcan1.Init.NominalTimeSeg1 = 2;
+  hfdcan1.Init.NominalTimeSeg1 = 17;
   hfdcan1.Init.NominalTimeSeg2 = 2;
   hfdcan1.Init.DataPrescaler = 1;
   hfdcan1.Init.DataSyncJumpWidth = 1;
   hfdcan1.Init.DataTimeSeg1 = 1;
   hfdcan1.Init.DataTimeSeg2 = 1;
-  hfdcan1.Init.StdFiltersNbr = 0;
+  hfdcan1.Init.StdFiltersNbr = 1;
   hfdcan1.Init.ExtFiltersNbr = 0;
   hfdcan1.Init.TxFifoQueueMode = FDCAN_TX_FIFO_OPERATION;
   if (HAL_FDCAN_Init(&hfdcan1) != HAL_OK)
@@ -278,7 +205,61 @@ static void MX_FDCAN1_Init(void)
   }
   /* USER CODE BEGIN FDCAN1_Init 2 */
 
+  if (MP7_FDCAN_ConfigureGlobalFilter(&hfdcan1) != HAL_OK) {
+    Error_Handler();
+  }
+
+  if (MP7_FDCAN_ConfigureFilter(&hfdcan1, MP7_HIGH_PRIORITY_MIN_ID, MP7_LOW_PRIORITY_MAX_ID, 0, FDCAN_FILTER_TO_RXFIFO0) != HAL_OK) {
+    Error_Handler();
+  }
+
+  if (HAL_FDCAN_Start(&hfdcan1) != HAL_OK) {
+    Error_Handler();
+  }
+
+  if (HAL_FDCAN_ActivateNotification(&hfdcan1, FDCAN_IT_RX_FIFO0_NEW_MESSAGE, 0) != HAL_OK) {
+    Error_Handler();
+  }
+
   /* USER CODE END FDCAN1_Init 2 */
+
+}
+
+/**
+  * @brief TIM6 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_TIM6_Init(void)
+{
+
+  /* USER CODE BEGIN TIM6_Init 0 */
+
+  /* USER CODE END TIM6_Init 0 */
+
+  TIM_MasterConfigTypeDef sMasterConfig = {0};
+
+  /* USER CODE BEGIN TIM6_Init 1 */
+
+  /* USER CODE END TIM6_Init 1 */
+  htim6.Instance = TIM6;
+  htim6.Init.Prescaler = 500-1;
+  htim6.Init.CounterMode = TIM_COUNTERMODE_UP;
+  htim6.Init.Period = 999;
+  htim6.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+  if (HAL_TIM_Base_Init(&htim6) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
+  sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
+  if (HAL_TIMEx_MasterConfigSynchronization(&htim6, &sMasterConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN TIM6_Init 2 */
+
+  /* USER CODE END TIM6_Init 2 */
 
 }
 
@@ -289,42 +270,53 @@ static void MX_FDCAN1_Init(void)
   */
 static void MX_GPIO_Init(void)
 {
-  GPIO_InitTypeDef GPIO_InitStruct = {0};
 /* USER CODE BEGIN MX_GPIO_Init_1 */
 /* USER CODE END MX_GPIO_Init_1 */
 
   /* GPIO Ports Clock Enable */
   __HAL_RCC_GPIOF_CLK_ENABLE();
   __HAL_RCC_GPIOA_CLK_ENABLE();
-  __HAL_RCC_GPIOB_CLK_ENABLE();
-
-  /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(LED_Disable_GPIO_Port, LED_Disable_Pin, GPIO_PIN_SET);
-
-  /*Configure GPIO pins : From_BRB_MCU_Pin To_CBRB_MCU_Pin From_CBRB_MCU_Pin From_BOTS_MCU_Pin */
-  GPIO_InitStruct.Pin = From_BRB_MCU_Pin|To_CBRB_MCU_Pin|From_CBRB_MCU_Pin|From_BOTS_MCU_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
-
-  /*Configure GPIO pins : From_AMS_MCU_Pin From_TSMS_MCU_Pin */
-  GPIO_InitStruct.Pin = From_AMS_MCU_Pin|From_TSMS_MCU_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
-
-  /*Configure GPIO pin : LED_Disable_Pin */
-  GPIO_InitStruct.Pin = LED_Disable_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(LED_Disable_GPIO_Port, &GPIO_InitStruct);
 
 /* USER CODE BEGIN MX_GPIO_Init_2 */
 /* USER CODE END MX_GPIO_Init_2 */
 }
 
 /* USER CODE BEGIN 4 */
+
+void HAL_FDCAN_RxFifo0Callback(FDCAN_HandleTypeDef *hfdcan, uint32_t RxFifo0ITs) {
+  FDCAN_RxHeaderTypeDef rxHeader;
+  uint8_t rxData[8];
+  if((RxFifo0ITs & FDCAN_IT_RX_FIFO0_NEW_MESSAGE) != 0) {
+    if(HAL_FDCAN_GetRxMessage(&hfdcan1, FDCAN_RX_FIFO0, &rxHeader, rxData) != HAL_OK) {
+      Error_Handler();
+    }
+
+    if (readyToDrive == 0) {
+      if (rxHeader.Identifier == RTD_MESSAGE_ID && rxHeader.DataLength == RTD_MESSAGE_DLC) {
+        readyToDrive = 1;
+        if (HAL_TIM_Base_Start_IT(&htim6) != HAL_OK) { // Start throttle watchdog
+          Error_Handler();
+        }
+      }
+    } else {
+      if (rxHeader.Identifier == THROTTLE_MESSAGE_ID && rxHeader.DataLength == THROTTLE_MESSAGE_DLC) {
+        throttleMessageWatchdogFlag = 1;
+      }
+    }
+
+  }
+}
+
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
+  // Timer expired
+  if (throttleMessageWatchdogFlag == 0) {
+    // Throttle message not received
+    Error_Handler();
+  } else {
+    throttleMessageWatchdogFlag = 0;
+  }
+}
+
 
 /* USER CODE END 4 */
 
@@ -337,6 +329,9 @@ void Error_Handler(void)
   /* USER CODE BEGIN Error_Handler_Debug */
   /* User can add his own implementation to report the HAL error return state */
   __disable_irq();
+
+  // TODO: Shut down the car through the relay
+
   while (1)
   {
   }

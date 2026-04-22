@@ -28,8 +28,6 @@ extern "C" {
 
 /* Includes ------------------------------------------------------------------*/
 #include "stm32g4xx_hal.h"
-#include "stm32g4xx_nucleo.h"
-#include <stdio.h>
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -59,24 +57,6 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
-#define From_BRB_MCU_Pin GPIO_PIN_4
-#define From_BRB_MCU_GPIO_Port GPIOA
-#define To_CBRB_MCU_Pin GPIO_PIN_5
-#define To_CBRB_MCU_GPIO_Port GPIOA
-#define From_CBRB_MCU_Pin GPIO_PIN_6
-#define From_CBRB_MCU_GPIO_Port GPIOA
-#define From_BOTS_MCU_Pin GPIO_PIN_7
-#define From_BOTS_MCU_GPIO_Port GPIOA
-#define From_AMS_MCU_Pin GPIO_PIN_11
-#define From_AMS_MCU_GPIO_Port GPIOB
-#define From_TSMS_MCU_Pin GPIO_PIN_12
-#define From_TSMS_MCU_GPIO_Port GPIOB
-#define LED_Disable_Pin GPIO_PIN_13
-#define LED_Disable_GPIO_Port GPIOB
-#define CAN_1RX_Pin GPIO_PIN_11
-#define CAN_1RX_GPIO_Port GPIOA
-#define CAN_1TX_Pin GPIO_PIN_12
-#define CAN_1TX_GPIO_Port GPIOA
 #define T_SWDIO_Pin GPIO_PIN_13
 #define T_SWDIO_GPIO_Port GPIOA
 #define T_SWCLK_Pin GPIO_PIN_14
