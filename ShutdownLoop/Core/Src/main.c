@@ -104,7 +104,6 @@ int main(void)
   MX_FDCAN1_Init();
   MX_TIM6_Init();
   /* USER CODE BEGIN 2 */
-
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -112,7 +111,7 @@ int main(void)
 
   while (1)
   {
-
+    // Wait for CAN messages
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -270,12 +269,23 @@ static void MX_TIM6_Init(void)
   */
 static void MX_GPIO_Init(void)
 {
+  GPIO_InitTypeDef GPIO_InitStruct = {0};
 /* USER CODE BEGIN MX_GPIO_Init_1 */
 /* USER CODE END MX_GPIO_Init_1 */
 
   /* GPIO Ports Clock Enable */
   __HAL_RCC_GPIOF_CLK_ENABLE();
   __HAL_RCC_GPIOA_CLK_ENABLE();
+
+  /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(SHTDN_RLY_GPIO_Port, SHTDN_RLY_Pin, GPIO_PIN_RESET);
+
+  /*Configure GPIO pin : SHTDN_RLY_Pin */
+  GPIO_InitStruct.Pin = SHTDN_RLY_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(SHTDN_RLY_GPIO_Port, &GPIO_InitStruct);
 
 /* USER CODE BEGIN MX_GPIO_Init_2 */
 /* USER CODE END MX_GPIO_Init_2 */
@@ -297,6 +307,9 @@ void HAL_FDCAN_RxFifo0Callback(FDCAN_HandleTypeDef *hfdcan, uint32_t RxFifo0ITs)
         if (HAL_TIM_Base_Start_IT(&htim6) != HAL_OK) { // Start throttle watchdog
           Error_Handler();
         }
+
+        // Turn on safety circuit relay
+        HAL_GPIO_WritePin(SHTDN_RLY_GPIO_Port, SHTDN_RLY_Pin, 1);
       }
     } else {
       if (rxHeader.Identifier == THROTTLE_MESSAGE_ID && rxHeader.DataLength == THROTTLE_MESSAGE_DLC) {
@@ -330,7 +343,8 @@ void Error_Handler(void)
   /* User can add his own implementation to report the HAL error return state */
   __disable_irq();
 
-  // TODO: Shut down the car through the relay
+  // Turn off the safety circuit relay to shut down the car
+  HAL_GPIO_WritePin(SHTDN_RLY_GPIO_Port, SHTDN_RLY_Pin, 0);
 
   while (1)
   {
